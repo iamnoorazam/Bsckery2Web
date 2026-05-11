@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { AuthProvider } from "@/store/authStore";
-import { Toaster } from "@/components/ui/toaster";
+import { ToastProvider } from "@/store/Toast";
 
 import MainLayout from "@/layouts/MainLayout";
 import AuthLayout from "@/layouts/AuthLayout";
@@ -28,54 +29,99 @@ import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminCategories from "@/pages/admin/AdminCategories";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 5, retry: 1 } },
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    },
+  },
 });
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
-          </Route>
+    <ToastProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/products/:id" element={<ProductDetail />} />
+            </Route>
 
-          {/* Auth */}
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-          </Route>
+            {/* Auth */}
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+            </Route>
 
-          {/* Customer */}
-          <Route element={<MainLayout />}>
-            <Route path="/cart" element={<ProtectedRoute roles={["customer"]}><Cart /></ProtectedRoute>} />
-            <Route path="/checkout" element={<ProtectedRoute roles={["customer"]}><Checkout /></ProtectedRoute>} />
-            <Route path="/orders" element={<ProtectedRoute roles={["customer"]}><Orders /></ProtectedRoute>} />
-          </Route>
+            {/* Customer */}
+            <Route element={<MainLayout />}>
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute roles={["customer"]}>
+                    <Cart />
+                  </ProtectedRoute>
+                }
+              />
 
-          {/* Owner */}
-          <Route element={<ProtectedRoute roles={["owner"]}><DashboardLayout /></ProtectedRoute>}>
-            <Route path="/owner/dashboard" element={<OwnerDashboard />} />
-            <Route path="/owner/products" element={<OwnerProducts />} />
-            <Route path="/owner/orders" element={<OwnerOrders />} />
-          </Route>
+              <Route
+                path="/checkout"
+                element={
+                  <ProtectedRoute roles={["customer"]}>
+                    <Checkout />
+                  </ProtectedRoute>
+                }
+              />
 
-          {/* Admin */}
-          <Route element={<ProtectedRoute roles={["admin"]}><DashboardLayout /></ProtectedRoute>}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/categories" element={<AdminCategories />} />
-          </Route>
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute roles={["customer"]}>
+                    <Orders />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
-    </AuthProvider>
+            {/* Owner */}
+            <Route
+              element={
+                <ProtectedRoute roles={["owner"]}>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+
+              <Route path="/owner/products" element={<OwnerProducts />} />
+
+              <Route path="/owner/orders" element={<OwnerOrders />} />
+            </Route>
+
+            {/* Admin */}
+            <Route
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+              <Route path="/admin/users" element={<AdminUsers />} />
+
+              <Route path="/admin/categories" element={<AdminCategories />} />
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ToastProvider>
   </QueryClientProvider>
 );
 

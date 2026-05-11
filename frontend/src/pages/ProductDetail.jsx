@@ -11,7 +11,7 @@ import { useProduct } from "@/hooks/useProducts";
 import { useReviews, useAddReview, useDeleteReview } from "@/hooks/useReviews";
 import { useAddToCart } from "@/hooks/useCart";
 import { useAuth } from "@/store/authStore";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../store/Toast";
 import { formatPrice } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

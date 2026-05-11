@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/hooks/useCart";
 import { usePlaceOrder } from "@/hooks/useOrders";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../store/Toast";
 import { formatPrice } from "@/lib/utils";
 
 const Checkout = () => {

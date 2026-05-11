@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Spinner from "@/components/atoms/Spinner";
 import EmptyState from "@/components/atoms/EmptyState";
 import { useAdminUsers, useBlockUser, useDeleteUser, useApproveOwner } from "@/hooks/useAdmin";
-import { useToast } from "@/components/ui/use-toast";
+import  { useToast } from "../../store/Toast";
 import { formatDate } from "@/lib/utils";
 
 const AdminUsers = () => {

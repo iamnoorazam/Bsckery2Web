@@ -3,52 +3,105 @@ import crypto from "crypto";
 import userRepository from "../repositories/user.repository.js";
 import generateToken from "../utils/generateToken.js";
 
+const createError = (message, statusCode) => {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+};
+
 const authService = {
   register: async ({ name, email, password, role }) => {
     const existing = await userRepository.findByEmail(email);
-    if (existing) throw new Error("Email already registered");
+
+    if (existing) {
+      throw createError("Email already registered", 409);
+    }
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await userRepository.create({ name, email, password: hashed, role });
+
+    const user = await userRepository.create({
+      name,
+      email,
+      password: hashed,
+      role,
+    });
 
     const token = generateToken(user._id, user.role);
-    return { token, user: { id: user._id, name: user.name, email: user.email, role: user.role } };
+
+    return {
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    };
   },
 
   login: async ({ email, password }) => {
     const user = await userRepository.findByEmail(email);
-    if (!user) throw new Error("Invalid credentials");
-    if (user.isBlocked) throw new Error("Account blocked");
+
+    if (!user) {
+      throw createError("Invalid credentials", 401);
+    }
+
+    if (user.isBlocked) {
+      throw createError("Account blocked", 403);
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error("Invalid credentials");
+
+    if (!isMatch) {
+      throw createError("Invalid credentials", 401);
+    }
 
     const token = generateToken(user._id, user.role);
-    return { token, user: { id: user._id, name: user.name, email: user.email, role: user.role } };
+
+    return {
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    };
   },
 
   forgotPassword: async (email) => {
     const user = await userRepository.findByEmail(email);
-    if (!user) throw new Error("No user found with this email");
+
+    if (!user) {
+      throw createError("No user found with this email", 404);
+    }
 
     const rawToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(rawToken)
+      .digest("hex");
 
     await userRepository.updateById(user._id, {
       resetPasswordToken: hashedToken,
       resetPasswordExpire: Date.now() + 15 * 60 * 1000,
     });
 
-    // TODO: send rawToken via email to user
     return rawToken;
   },
 
   resetPassword: async ({ token, password }) => {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
     const user = await userRepository.findByResetToken(hashedToken);
-    if (!user) throw new Error("Invalid or expired reset token");
+
+    if (!user) {
+      throw createError("Invalid or expired reset token", 400);
+    }
 
     const hashed = await bcrypt.hash(password, 10);
+
     await userRepository.updateById(user._id, {
       password: hashed,
       resetPasswordToken: undefined,

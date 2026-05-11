@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import FormField from "@/components/molecules/FormField";
 import { authApi } from "@/api/auth.api";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../../store/Toast";
 
 const ForgotPassword = () => {
   const { toast } = useToast();

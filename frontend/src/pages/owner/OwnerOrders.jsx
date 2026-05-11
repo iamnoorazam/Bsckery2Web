@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import EmptyState from "@/components/atoms/EmptyState";
 import Spinner from "@/components/atoms/Spinner";
 import { useOwnerOrders, useOwnerUpdateOrderStatus } from "@/hooks/useOwner";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../../store/Toast";
 import { formatPrice, formatDate, getStatusColor } from "@/lib/utils";
 
 const STATUS_OPTIONS = ["accepted", "preparing", "out_for_delivery", "delivered", "cancelled"];

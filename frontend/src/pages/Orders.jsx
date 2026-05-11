@@ -4,7 +4,7 @@ import OrderCard from "@/components/molecules/OrderCard";
 import EmptyState from "@/components/atoms/EmptyState";
 import Spinner from "@/components/atoms/Spinner";
 import { useMyOrders, useCancelOrder } from "@/hooks/useOrders";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../store/Toast";
 
 const Orders = () => {
   const { data: orders, isLoading } = useMyOrders();

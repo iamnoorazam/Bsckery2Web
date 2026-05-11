@@ -11,7 +11,7 @@ import Spinner from "@/components/atoms/Spinner";
 import { useOwnerProducts } from "@/hooks/useOwner";
 import { useCreateProduct, useDeleteProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../../store/Toast";
 import { formatPrice } from "@/lib/utils";
 
 const emptyForm = { name: "", description: "", price: "", category: "", stock: "" };

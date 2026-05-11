@@ -7,11 +7,11 @@ import StarRating from "@/components/atoms/StarRating";
 import { formatPrice } from "@/lib/utils";
 import { useAddToCart } from "@/hooks/useCart";
 import { useAuth } from "@/store/authStore";
-import { useToast } from "@/components/ui/use-toast";
+import {useToast} from "../../store/Toast";
 
 const ProductCard = ({ product }) => {
   const { user } = useAuth();
-  const { toast } = useToast();
+  const {showToast} = useToast();
   const addToCart = useAddToCart();
 
   const handleAddToCart = (e) => {

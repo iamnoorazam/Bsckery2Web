@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import FormField from "@/components/molecules/FormField";
 import { useAuth } from "@/store/authStore";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../../store/Toast";
 
 const Login = () => {
   const navigate = useNavigate();

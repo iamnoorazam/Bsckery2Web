@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import EmptyState from "@/components/atoms/EmptyState";
 import Spinner from "@/components/atoms/Spinner";
 import { useCategories, useCreateCategory, useDeleteCategory } from "@/hooks/useCategories";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../../store/Toast";
 
 const AdminCategories = () => {
   const { data: categories, isLoading } = useCategories();
