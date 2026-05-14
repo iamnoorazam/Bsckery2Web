@@ -14,17 +14,30 @@ const Orders = () => {
   const handleCancel = (id) => {
     cancelOrder.mutate(id, {
       onSuccess: () => toast({ title: "Order cancelled" }),
-      onError: (err) => toast({ title: err.response?.data?.message || "Cannot cancel order", variant: "destructive" }),
+      onError: (err) =>
+        toast({
+          title: err.response?.data?.message || "Cannot cancel order",
+          variant: "destructive",
+        }),
     });
   };
 
-  if (isLoading) return <div className="flex justify-center py-16"><Spinner /></div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center py-16">
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className="max-w-2xl mx-auto animate-fade-in">
       <h1 className="text-3xl font-bold mb-6">My Orders</h1>
       {!orders?.length ? (
-        <EmptyState icon="📦" title="No orders yet" description="Place your first order today!" />
+        <EmptyState
+          icon="📦"
+          title="No orders yet"
+          description="Place your first order today!"
+        />
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
@@ -36,7 +49,7 @@ const Orders = () => {
                   size="sm"
                   className="mt-2"
                   onClick={() => handleCancel(order._id)}
-                  disabled={cancelOrder.isPending}
+                  disabled={cancelOrder.isLoading}
                 >
                   Cancel Order
                 </Button>

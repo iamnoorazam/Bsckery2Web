@@ -34,8 +34,7 @@ const ownerService = {
     return orderRepository.updateById(orderId, { orderStatus: status });
   },
 
-  getOwnerProducts: (ownerId) =>
-    productRepository.findAll({ owner: ownerId }),
+  getOwnerProducts: (ownerId) => productRepository.findByOwner(ownerId),
 };
 
 export default ownerService;

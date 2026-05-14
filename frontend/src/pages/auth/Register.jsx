@@ -2,13 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import FormField from "@/components/molecules/FormField";
 import { useAuth } from "@/store/authStore";
 import { useToast } from "../../store/Toast";
@@ -21,7 +14,6 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    role: "customer",
   });
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +25,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await register(form);
+      await register({ ...form, role: "owner" });
       showToast({
         title: "Registration Successful",
         description: "Welcome to BakeryCo 🎉",
@@ -58,9 +50,9 @@ const Register = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="text-center mb-2">
-        <h1 className="text-2xl font-bold">Create Account</h1>
+        <h1 className="text-2xl font-bold">Create Owner Account</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Join BakeryCo today
+          Register as a bakery owner to manage products.
         </p>
       </div>
       <FormField
@@ -87,22 +79,13 @@ const Register = () => {
         required
       />
       <div className="space-y-1.5">
-        <Label>Role</Label>
-        <Select
-          value={form.role}
-          onValueChange={(v) => setForm((p) => ({ ...p, role: v }))}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="customer">Customer</SelectItem>
-            <SelectItem value="owner">Bakery Owner</SelectItem>
-          </SelectContent>
-        </Select>
+        <Label>Account type</Label>
+        <p className="text-sm text-muted-foreground">
+          Owner account (only owner signup is supported)
+        </p>
       </div>
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Creating account..." : "Register"}
+        {loading ? "Creating account..." : "Create Owner Account"}
       </Button>
       <p className="text-sm text-center text-muted-foreground">
         Already have an account?{" "}

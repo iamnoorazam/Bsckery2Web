@@ -17,6 +17,10 @@ const authService = {
       throw createError("Email already registered", 409);
     }
 
+    if (role !== "owner") {
+      throw createError("Only owner registration is allowed", 403);
+    }
+
     const hashed = await bcrypt.hash(password, 10);
 
     const user = await userRepository.create({

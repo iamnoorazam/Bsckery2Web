@@ -26,10 +26,15 @@ const productService = {
     const { name, description, price, category, stock } = body;
 
     if (!name || !description || !price || !category) {
-      throw Object.assign(new Error("name, description, price and category are required"), { statusCode: 400 });
+      throw Object.assign(
+        new Error("name, description, price and category are required"),
+        { statusCode: 400 },
+      );
     }
     if (!category.match(/^[a-f\d]{24}$/i)) {
-      throw Object.assign(new Error("Invalid category selected"), { statusCode: 400 });
+      throw Object.assign(new Error("Invalid category selected"), {
+        statusCode: 400,
+      });
     }
 
     const images = files ? files.map((f) => f.path) : [];
@@ -71,9 +76,21 @@ const productService = {
     const isOwner = product.owner._id.toString() === user._id.toString();
     if (!isOwner && user.role !== "admin") throw new Error("Not authorized");
 
-    for (const imgUrl of product.images) {
-      const publicId = imgUrl.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(`bakery/products/${publicId}`);
+    if (
+      product.images &&
+      Array.isArray(product.images) &&
+      product.images.length > 0
+    ) {
+      for (const imgUrl of product.images) {
+        try {
+          const publicId = imgUrl.split("/").pop().split(".")[0];
+          if (publicId) {
+            await cloudinary.uploader.destroy(`bakery/products/${publicId}`);
+          }
+        } catch (error) {
+          console.error("Error deleting image from Cloudinary:", error);
+        }
+      }
     }
 
     await productRepository.deleteById(id);

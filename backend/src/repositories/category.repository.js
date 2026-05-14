@@ -1,11 +1,11 @@
 import Category from "../models/Category.js";
 
 const categoryRepository = {
-  findAll: () => Category.find(),
+  findAll: () => Category.find().select("name image").lean().exec(),
 
-  findById: (id) => Category.findById(id),
+  findById: (id) => Category.findById(id).lean().exec(),
 
-  findByName: (name) => Category.findOne({ name }),
+  findByName: (name) => Category.findOne({ name }).lean().exec(),
 
   create: (data) => Category.create(data),
 

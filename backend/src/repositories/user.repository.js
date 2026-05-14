@@ -1,9 +1,9 @@
 import User from "../models/User.js";
 
 const userRepository = {
-  findByEmail: (email) => User.findOne({ email }),
+  findByEmail: (email) => User.findOne({ email }).lean().exec(),
 
-  findById: (id) => User.findById(id).select("-password"),
+  findById: (id) => User.findById(id).select("-password").lean().exec(),
 
   findByIdWithPassword: (id) => User.findById(id),
 
@@ -15,11 +15,12 @@ const userRepository = {
 
   create: (data) => User.create(data),
 
-  updateById: (id, data) => User.findByIdAndUpdate(id, data, { new: true }).select("-password"),
+  updateById: (id, data) =>
+    User.findByIdAndUpdate(id, data, { new: true }).select("-password"),
 
   deleteById: (id) => User.findByIdAndDelete(id),
 
-  findAll: (filter = {}) => User.find(filter).select("-password"),
+  findAll: (filter = {}) => User.find(filter).select("-password").lean().exec(),
 };
 
 export default userRepository;

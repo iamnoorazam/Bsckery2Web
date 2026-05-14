@@ -3,6 +3,7 @@ import http from "http";
 import app from "./app.js";
 import connectDB from "./config/db.js";
 import socketService from "./services/socket.service.js";
+import seedAdmin from "./utils/seedAdmin.js";
 
 const PORT = process.env.PORT || 5000;
 
@@ -10,7 +11,8 @@ const server = http.createServer(app);
 
 socketService.init(server);
 
-connectDB().then(() => {
+connectDB().then(async () => {
+  await seedAdmin();
   server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });

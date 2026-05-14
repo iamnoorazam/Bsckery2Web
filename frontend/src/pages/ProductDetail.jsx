@@ -30,18 +30,32 @@ const ProductDetail = () => {
   const deleteReview = useDeleteReview(id);
 
   const handleAddToCart = () => {
-    if (!user) return toast({ title: "Please login first", variant: "destructive" });
-    addToCart.mutate({ productId: id, quantity: 1 }, {
-      onSuccess: () => toast({ title: "Added to cart!" }),
-    });
+    if (!user)
+      return toast({ title: "Please login first", variant: "destructive" });
+    addToCart.mutate(
+      { productId: id, quantity: 1 },
+      {
+        onSuccess: () => toast({ title: "Added to cart!" }),
+      },
+    );
   };
 
   const handleReview = (e) => {
     e.preventDefault();
-    addReview.mutate({ rating, comment }, {
-      onSuccess: () => { setComment(""); toast({ title: "Review added!" }); },
-      onError: (err) => toast({ title: err.response?.data?.message || "Error", variant: "destructive" }),
-    });
+    addReview.mutate(
+      { rating, comment },
+      {
+        onSuccess: () => {
+          setComment("");
+          toast({ title: "Review added!" });
+        },
+        onError: (err) =>
+          toast({
+            title: err.response?.data?.message || "Error",
+            variant: "destructive",
+          }),
+      },
+    );
   };
 
   if (isLoading) {
@@ -58,14 +72,22 @@ const ProductDetail = () => {
     );
   }
 
-  if (!product) return <p className="text-center py-16 text-muted-foreground">Product not found.</p>;
+  if (!product)
+    return (
+      <p className="text-center py-16 text-muted-foreground">
+        Product not found.
+      </p>
+    );
 
   return (
     <div className="animate-fade-in space-y-10">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="rounded-lg overflow-hidden border">
           <img
-            src={product.images?.[0] || "https://placehold.co/600x400?text=No+Image"}
+            src={
+              product.images?.[0] ||
+              "https://placehold.co/600x400?text=No+Image"
+            }
             alt={product.name}
             className="w-full h-80 object-cover"
           />
@@ -77,20 +99,37 @@ const ProductDetail = () => {
             <h1 className="text-3xl font-bold mt-2">{product.name}</h1>
             <div className="flex items-center gap-2 mt-1">
               <StarRating rating={Math.round(product.averageRating || 0)} />
-              <span className="text-sm text-muted-foreground">({product.totalReviews} reviews)</span>
+              <span className="text-sm text-muted-foreground">
+                ({product.totalReviews} reviews)
+              </span>
             </div>
           </div>
 
-          <p className="text-3xl font-bold text-primary">{formatPrice(product.price)}</p>
+          <p className="text-3xl font-bold text-primary">
+            {formatPrice(product.price)}
+          </p>
           <p className="text-muted-foreground">{product.description}</p>
           <p className="text-sm">
-            Stock: <span className={product.stock > 0 ? "text-green-600 font-medium" : "text-red-500 font-medium"}>
-              {product.stock > 0 ? `${product.stock} available` : "Out of stock"}
+            Stock:{" "}
+            <span
+              className={
+                product.stock > 0
+                  ? "text-green-600 font-medium"
+                  : "text-red-500 font-medium"
+              }
+            >
+              {product.stock > 0
+                ? `${product.stock} available`
+                : "Out of stock"}
             </span>
           </p>
 
           {user?.role === "customer" && (
-            <Button size="lg" onClick={handleAddToCart} disabled={addToCart.isPending || product.stock === 0}>
+            <Button
+              size="lg"
+              onClick={handleAddToCart}
+              disabled={addToCart.isLoading || product.stock === 0}
+            >
               <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
             </Button>
@@ -104,25 +143,47 @@ const ProductDetail = () => {
         <h2 className="text-xl font-bold">Reviews ({reviews?.length || 0})</h2>
 
         {user?.role === "customer" && (
-          <form onSubmit={handleReview} className="border rounded-lg p-4 space-y-3 bg-card">
+          <form
+            onSubmit={handleReview}
+            className="border rounded-lg p-4 space-y-3 bg-card"
+          >
             <h3 className="font-medium">Leave a Review</h3>
             <div className="space-y-1">
               <Label>Rating</Label>
-              <StarRating rating={rating} interactive onChange={setRating} size={22} />
+              <StarRating
+                rating={rating}
+                interactive
+                onChange={setRating}
+                size={22}
+              />
             </div>
             <div className="space-y-1">
               <Label>Comment</Label>
-              <Input value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Share your experience..." required />
+              <Input
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Share your experience..."
+                required
+              />
             </div>
-            <Button type="submit" disabled={addReview.isPending}>Submit Review</Button>
+            <Button type="submit" disabled={addReview.isLoading}>
+              Submit Review
+            </Button>
           </form>
         )}
 
         <div>
-          {reviews?.length > 0
-            ? reviews.map((r) => <ReviewCard key={r._id} review={r} onDelete={(id) => deleteReview.mutate(id)} />)
-            : <p className="text-muted-foreground text-sm">No reviews yet.</p>
-          }
+          {reviews?.length > 0 ? (
+            reviews.map((r) => (
+              <ReviewCard
+                key={r._id}
+                review={r}
+                onDelete={(id) => deleteReview.mutate(id)}
+              />
+            ))
+          ) : (
+            <p className="text-muted-foreground text-sm">No reviews yet.</p>
+          )}
         </div>
       </div>
     </div>
