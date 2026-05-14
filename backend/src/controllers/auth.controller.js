@@ -17,8 +17,13 @@ export const logout = (req, res) => {
 };
 
 export const forgotPassword = asyncHandler(async (req, res) => {
-  const token = await authService.forgotPassword(req.body.email);
-  sendResponse(res, 200, "Reset token generated", { resetToken: token });
+  const result = await authService.forgotPassword(req.body.email);
+  sendResponse(res, 200, "OTP sent to your email", result);
+});
+
+export const verifyOTP = asyncHandler(async (req, res) => {
+  const result = await authService.verifyOTP(req.body);
+  sendResponse(res, 200, "OTP verified successfully", result);
 });
 
 export const resetPassword = asyncHandler(async (req, res) => {

@@ -13,6 +13,14 @@ const userRepository = {
       resetPasswordExpire: { $gt: Date.now() },
     }),
 
+  findByOTP: (otp) =>
+    User.findOne({
+      otp,
+      otpExpire: { $gt: Date.now() },
+      otpAttempts: { $lt: 5 },
+      otpBlockedUntil: { $lt: Date.now() },
+    }),
+
   create: (data) => User.create(data),
 
   updateById: (id, data) =>

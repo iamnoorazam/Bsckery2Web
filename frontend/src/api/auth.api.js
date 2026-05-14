@@ -5,5 +5,6 @@ export const authApi = {
   login: (data) => api.post("/auth/login", data),
   logout: () => api.post("/auth/logout"),
   forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
+  verifyOTP: (data) => api.post("/auth/verify-otp", data),
   resetPassword: (data) => api.post("/auth/reset-password", data),
 };

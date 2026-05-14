@@ -276,8 +276,9 @@ Base URL: `http://localhost:5000/api`
 - `POST /register` - Register a new user
 - `POST /login` - Login and get token
 - `POST /logout` - Logout
-- `POST /forgot-password` - Request password reset token
-- `POST /reset-password` - Reset password using token
+- `POST /forgot-password` - Request OTP for password reset (sends OTP to email)
+- `POST /verify-otp` - Verify OTP and get reset token
+- `POST /reset-password` - Reset password using reset token
 
 ### Products - `/api/products`
 - `GET /` - Get all products (with filters)

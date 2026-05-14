@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema(
     addresses: [addressSchema],
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+    // OTP fields for password reset
+    otp: String,
+    otpExpire: Date,
+    otpAttempts: { type: Number, default: 0 },
+    otpBlockedUntil: Date
   },
   { timestamps: true }
 );
