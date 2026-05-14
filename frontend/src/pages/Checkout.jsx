@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import FormField from "@/components/molecules/FormField";
@@ -13,12 +13,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/hooks/useCart";
 import { usePlaceOrder } from "@/hooks/useOrders";
+import { useAuth } from "@/store/authStore";
 import { useToast } from "../store/Toast";
 import { formatPrice } from "@/lib/utils";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isLoggedIn } = useAuth();
   const { data: cart } = useCart();
   const placeOrder = usePlaceOrder();
 
@@ -35,6 +37,14 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!isLoggedIn || user?.role !== "customer") {
+      toast({
+        title: "Please login as customer to place order",
+        variant: "destructive",
+      });
+      navigate(`/login?redirect=${encodeURIComponent("/checkout")}`);
+      return;
+    }
     placeOrder.mutate(
       { deliveryAddress: form, paymentMethod },
       {
@@ -54,6 +64,20 @@ const Checkout = () => {
   return (
     <div className="max-w-xl mx-auto animate-fade-in">
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+
+      {(!isLoggedIn || user?.role !== "customer") && (
+        <div className="mb-4 rounded-lg border p-3 bg-card">
+          <p className="text-sm text-muted-foreground">
+            You can browse and add items without login. Login is needed only to place the order.
+          </p>
+          <Button className="mt-3" asChild>
+            <Link to={`/login?redirect=${encodeURIComponent("/checkout")}`}>
+              Login to Continue
+            </Link>
+          </Button>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-card border rounded-lg p-4 space-y-4">
           <h2 className="font-semibold">Delivery Address</h2>
@@ -108,7 +132,7 @@ const Checkout = () => {
         <div className="bg-card border rounded-lg p-4 space-y-2">
           <h2 className="font-semibold">Order Summary</h2>
           {cart?.items?.map((item) => (
-            <div key={item._id} className="flex justify-between text-sm">
+            <div key={item._id || item.product?._id} className="flex justify-between text-sm">
               <span>
                 {item.product?.name} × {item.quantity}
               </span>

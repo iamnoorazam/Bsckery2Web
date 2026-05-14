@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import FormField from "@/components/molecules/FormField";
 import { useAuth } from "@/store/authStore";
@@ -8,6 +8,7 @@ import { validateLoginForm } from "@/utils/validation";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, logout } = useAuth();
   const { showToast } = useToast();
 
@@ -15,17 +16,24 @@ const Login = () => {
     try {
       const user = await login(values);
 
-      if (user.role !== "owner") {
+      if (user.role === "admin") {
         logout();
         showToast({
           ...TOAST_MESSAGES.ERROR.UNAUTHORIZED,
-          description: "Please use the owner login page.",
+          description: "Please use the admin login page.",
         });
         return;
       }
 
       showToast(TOAST_MESSAGES.SUCCESS.LOGIN);
-      navigate("/owner/dashboard");
+      const redirectPath = new URLSearchParams(location.search).get("redirect");
+      if (redirectPath) {
+        navigate(redirectPath);
+      } else if (user.role === "owner") {
+        navigate("/owner/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       const message = err.userMessage || err.response?.data?.message;
       showToast({

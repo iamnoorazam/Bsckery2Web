@@ -5,6 +5,7 @@ export const useOwnerDashboard = () =>
   useQuery({
     queryKey: ["owner-dashboard"],
     queryFn: () => ownerApi.getDashboard().then((r) => r.data.data),
+    refetchOnMount: "always",
   });
 
 export const useOwnerOrders = () =>
@@ -17,6 +18,7 @@ export const useOwnerProducts = () =>
   useQuery({
     queryKey: ["owner-products"],
     queryFn: () => ownerApi.getProducts().then((r) => r.data.data),
+    refetchOnMount: "always",
   });
 
 export const useOwnerUpdateOrderStatus = () => {

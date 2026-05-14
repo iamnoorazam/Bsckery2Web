@@ -28,7 +28,9 @@ const Cart = () => {
     <div className="max-w-2xl mx-auto animate-fade-in">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
       <div className="bg-card border rounded-lg p-4">
-        {cart.items.map((item) => <CartItem key={item._id} item={item} />)}
+        {cart.items.map((item) => (
+          <CartItem key={item._id || item.product?._id} item={item} />
+        ))}
       </div>
       <div className="mt-4 bg-card border rounded-lg p-4 space-y-3">
         <div className="flex justify-between text-sm text-muted-foreground">

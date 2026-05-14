@@ -34,7 +34,9 @@ import AdminCategories from "@/pages/admin/AdminCategories";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5,
+      staleTime: 0,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
       retry: 1,
     },
   },
@@ -52,6 +54,8 @@ const App = () => (
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
               </Route>
 
               {/* Auth */}
@@ -65,24 +69,6 @@ const App = () => (
 
               {/* Customer */}
               <Route element={<MainLayout />}>
-                <Route
-                  path="/cart"
-                  element={
-                    <ProtectedRoute roles={["customer"]}>
-                      <Cart />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute roles={["customer"]}>
-                      <Checkout />
-                    </ProtectedRoute>
-                  }
-                />
-
                 <Route
                   path="/orders"
                   element={

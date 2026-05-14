@@ -35,7 +35,7 @@ const emptyForm = {
 };
 
 const OwnerProducts = () => {
-  const { data: products, isLoading } = useOwnerProducts();
+  const { data: products, isLoading, refetch: refetchOwnerProducts } = useOwnerProducts();
   const { data: categories } = useCategories();
   const createProduct = useCreateProduct();
   const deleteProduct = useDeleteProduct();
@@ -76,6 +76,7 @@ const OwnerProducts = () => {
 
     createProduct.mutate(fd, {
       onSuccess: () => {
+        refetchOwnerProducts();
         toast({ title: "Product created!" });
         setOpen(false);
         setForm(emptyForm);
@@ -272,7 +273,10 @@ const OwnerProducts = () => {
                   disabled={deleteProduct.isLoading}
                   onClick={() =>
                     deleteProduct.mutate(p._id, {
-                      onSuccess: () => toast({ title: "Product deleted" }),
+                      onSuccess: () => {
+                        refetchOwnerProducts();
+                        toast({ title: "Product deleted" });
+                      },
                       onError: () =>
                         toast({
                           title: "Failed to delete",

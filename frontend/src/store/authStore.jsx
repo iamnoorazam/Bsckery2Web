@@ -1,5 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import { authApi } from "@/api/auth.api";
+import { cartApi } from "@/api/cart.api";
+
+const GUEST_CART_KEY = "guest_cart";
 
 const AuthContext = createContext(null);
 
@@ -15,6 +18,28 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
+
+    if (user.role === "customer") {
+      try {
+        const rawGuestCart = localStorage.getItem(GUEST_CART_KEY);
+        const guestCart = rawGuestCart ? JSON.parse(rawGuestCart) : { items: [] };
+
+        if (Array.isArray(guestCart.items) && guestCart.items.length > 0) {
+          for (const item of guestCart.items) {
+            if (item?.product?._id && item?.quantity > 0) {
+              await cartApi.addItem({
+                productId: item.product._id,
+                quantity: item.quantity,
+              });
+            }
+          }
+          localStorage.removeItem(GUEST_CART_KEY);
+        }
+      } catch {
+        // Keep login flow resilient even if guest cart sync fails.
+      }
+    }
+
     return user;
   };
 

@@ -16,11 +16,23 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = (e) => {
     e.preventDefault();
-    if (!user)
-      return toast({
-        title: "Please login to add items to cart",
-        variant: "destructive",
-      });
+    if (!user) {
+      addToCart.mutate(
+        {
+          productId: product._id,
+          quantity: 1,
+          product: {
+            _id: product._id,
+            name: product.name,
+            images: product.images,
+            price: product.price,
+          },
+          price: product.price,
+        },
+        { onSuccess: () => toast({ title: "Added to cart!" }) },
+      );
+      return;
+    }
     if (user.role !== "customer")
       return toast({
         title: "Only customers can add to cart",

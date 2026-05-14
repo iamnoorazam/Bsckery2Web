@@ -33,7 +33,7 @@ const Register = () => {
 
       setTimeout(() => {
         navigate("/login");
-      }, 1500);
+      }, 1000);
     } catch (err) {
       showToast({
         title: "Registration Failed",

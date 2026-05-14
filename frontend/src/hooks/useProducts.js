@@ -5,6 +5,7 @@ export const useProducts = (params) =>
   useQuery({
     queryKey: ["products", params],
     queryFn: () => productApi.getAll(params).then((r) => r.data.data),
+    refetchOnMount: "always",
   });
 
 export const useProduct = (id) =>
@@ -21,6 +22,7 @@ export const useCreateProduct = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["products"] });
       qc.invalidateQueries({ queryKey: ["owner-products"] });
+      qc.invalidateQueries({ queryKey: ["owner-dashboard"] });
     },
   });
 };
@@ -40,6 +42,7 @@ export const useDeleteProduct = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["products"] });
       qc.invalidateQueries({ queryKey: ["owner-products"] });
+      qc.invalidateQueries({ queryKey: ["owner-dashboard"] });
     },
   });
 };

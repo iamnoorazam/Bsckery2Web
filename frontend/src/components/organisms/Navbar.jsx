@@ -139,6 +139,9 @@ const Navbar = () => {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>
+                <Link to="/cart">Cart</Link>
+              </Button>
+              <Button variant="ghost" asChild>
                 <Link to="/login">Owner Login</Link>
               </Button>
               <Button variant="ghost" asChild>

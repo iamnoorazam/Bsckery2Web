@@ -30,8 +30,25 @@ const ProductDetail = () => {
   const deleteReview = useDeleteReview(id);
 
   const handleAddToCart = () => {
-    if (!user)
-      return toast({ title: "Please login first", variant: "destructive" });
+    if (!user) {
+      addToCart.mutate(
+        {
+          productId: id,
+          quantity: 1,
+          product: {
+            _id: product._id,
+            name: product.name,
+            images: product.images,
+            price: product.price,
+          },
+          price: product.price,
+        },
+        {
+          onSuccess: () => toast({ title: "Added to cart!" }),
+        },
+      );
+      return;
+    }
     addToCart.mutate(
       { productId: id, quantity: 1 },
       {
@@ -124,7 +141,7 @@ const ProductDetail = () => {
             </span>
           </p>
 
-          {user?.role === "customer" && (
+          {(!user || user?.role === "customer") && (
             <Button
               size="lg"
               onClick={handleAddToCart}
