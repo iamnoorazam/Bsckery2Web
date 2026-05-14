@@ -59,10 +59,7 @@ const DashboardLayout = () => {
           <Button
             variant="ghost"
             className="w-full justify-start gap-2 text-muted-foreground"
-            onClick={() => {
-              logout();
-              window.location.href = "/";
-            }}
+            onClick={logout}
           >
             <LogOut className="h-4 w-4" />
             Logout

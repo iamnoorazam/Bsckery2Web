@@ -107,6 +107,9 @@ const Login = () => {
       >
         {isSubmitting ? "Logging in..." : "Login"}
       </Button>
+      <Button type="button" variant="outline" className="w-full" asChild>
+        <Link to="/">Return to Home</Link>
+      </Button>
 
       <p className="text-sm text-center text-muted-foreground">
         Don't have an account?{" "}

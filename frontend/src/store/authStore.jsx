@@ -28,10 +28,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    authApi.logout();
+    authApi.logout().catch(() => {});
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    window.location.href = "/";
   };
 
   return (

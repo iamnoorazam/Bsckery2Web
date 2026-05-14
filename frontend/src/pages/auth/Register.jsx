@@ -87,6 +87,9 @@ const Register = () => {
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? "Creating account..." : "Create Owner Account"}
       </Button>
+      <Button type="button" variant="outline" className="w-full" asChild>
+        <Link to="/">Return to Home</Link>
+      </Button>
       <p className="text-sm text-center text-muted-foreground">
         Already have an account?{" "}
         <Link to="/login" className="text-primary hover:underline font-medium">
